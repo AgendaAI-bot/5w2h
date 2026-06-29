@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F7F6F3;--surface:#FFFFFF;--surface-2:#F0EEE9;
+  --border:rgba(0,0,0,0.08);--border-md:rgba(0,0,0,0.14);
+  --text:#1C1B18;--text-2:#6B6A65;--text-3:#A5A49F;
+  --purple:#534AB7;--purple-bg:#EEEDFE;--purple-txt:#3C3489;
+  --green:#0B6E4F;--green-bg:#E2F4ED;--green-txt:#085040;
+  --red:#D94040;--red-bg:#FDEAEA;
+  --amber:#B07010;--amber-bg:#FEF3DC;
+  --done:#1D9E75;--r:8px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;padding:24px;}
+
+/* PROJETO HEADER */
+.proj-header{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px;}
+.proj-title{font-size:20px;font-weight:600;letter-spacing:-0.4px;margin-bottom:6px;}
+.proj-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.proj-progress{display:flex;align-items:center;gap:10px;}
+.proj-prog-bar{flex:1;height:6px;background:var(--surface-2);border-radius:999px;overflow:hidden;}
+.proj-prog-fill{height:100%;background:var(--done);border-radius:999px;transition:width 0.4s;}
+.proj-prog-label{font-size:12px;font-weight:500;color:var(--text-2);min-width:36px;}
+
+/* STATUS BADGES */
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;}
+.badge-ativo{background:var(--green-bg);color:var(--green-txt);}
+.badge-pausado{background:var(--amber-bg);color:var(--amber);}
+.badge-empresa{background:var(--purple-bg);color:var(--purple-txt);}
+.status-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:0.04em;}
+.as-pendente{background:var(--surface-2);color:var(--text-2);}
+.as-em_andamento{background:var(--purple-bg);color:var(--purple-txt);}
+.as-concluido{background:var(--green-bg);color:var(--green-txt);}
+.as-atrasado{background:var(--red-bg);color:var(--red);}
+
+/* PQ BLOCK */
+.pq-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;}
+.pq-header{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background 0.12s;}
+.pq-header:hover{background:var(--bg);}
+.pq-label{font-size:10px;font-weight:600;color:var(--purple);background:var(--purple-bg);padding:2px 7px;border-radius:999px;letter-spacing:0.04em;flex-shrink:0;}
+.pq-texto{font-size:13px;font-weight:500;flex:1;}
+.pq-prog{display:flex;align-items:center;gap:8px;min-width:140px;}
+.prog-bar{flex:1;height:5px;background:var(--surface-2);border-radius:999px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--done);border-radius:999px;transition:width 0.4s;}
+.prog-pct{font-size:11px;font-weight:500;color:var(--text-2);min-width:30px;text-align:right;}
+.pq-chevron{font-size:12px;color:var(--text-3);transition:transform 0.2s;flex-shrink:0;}
+.pq-chevron.open{transform:rotate(180deg);}
+.pq-body{border-top:1px solid var(--border);padding:0 0 8px 0;display:none;}
+.pq-body.open{display:block;}
+
+/* ADD INLINE */
+.add-inline{display:flex;align-items:center;gap:8px;padding:8px 16px;}
+.add-inline-inp{flex:1;font-size:12px;font-family:'Inter',sans-serif;border:none;background:transparent;outline:none;color:var(--text);}
+.add-inline-inp::placeholder{color:var(--text-3);}
+.add-inline-btn{font-size:11px;font-family:'Inter',sans-serif;font-weight:500;padding:3px 10px;border-radius:5px;border:1px solid var(--border-md);background:transparent;cursor:pointer;color:var(--text-2);}
+.add-inline-btn:hover{background:var(--bg);}
+.add-inline-btn.ok{background:var(--text);color:#fff;border-color:var(--text);}
+.add-trigger-row{display:flex;align-items:center;gap:6px;padding:8px 16px;color:var(--text-3);font-size:11px;cursor:pointer;border-radius:var(--r);transition:all 0.12s;margin:0 8px;}
+.add-trigger-row:hover{color:var(--text-2);background:var(--bg);}
+
+/* OQ BLOCK */
+.oq-block{margin:6px 12px;}
+.oq-header{padding:10px 12px;display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:var(--r);cursor:pointer;border:1px solid var(--border);}
+.oq-header:hover{border-color:var(--border-md);}
+.oq-label{font-size:10px;font-weight:600;color:var(--amber);background:var(--amber-bg);padding:2px 7px;border-radius:999px;letter-spacing:0.04em;flex-shrink:0;}
+.oq-texto{font-size:12px;font-weight:500;flex:1;}
+.oq-prog{display:flex;align-items:center;gap:6px;min-width:110px;}
+.oq-body{padding:6px 0 4px 16px;}
+
+/* COMO ROW */
+.como-row{display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:var(--r);cursor:pointer;transition:background 0.1s;margin:3px 0;}
+.como-row:hover{background:var(--bg);}
+.como-chk{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border-md);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.como-chk.on{background:var(--done);border-color:var(--done);}
+.como-chk.on::after{content:'';width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block;}
+.como-chk.prog{background:var(--purple-bg);border-color:var(--purple);}
+.como-chk.late{background:var(--red-bg);border-color:var(--red);}
+.como-texto{font-size:12px;flex:1;color:var(--text);}
+.como-texto.done{text-decoration:line-through;color:var(--text-3);}
+.como-resp{font-size:10px;color:var(--text-3);background:var(--surface-2);padding:1px 6px;border-radius:999px;white-space:nowrap;}
+.como-prazo{font-size:10px;color:var(--text-3);}
+.como-dep{font-size:10px;color:var(--amber);background:var(--amber-bg);padding:1px 6px;border-radius:999px;}
+
+/* PAINEL LATERAL COMO */
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.2);z-index:200;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.panel-overlay.open{opacity:1;pointer-events:all;}
+.side-panel{position:fixed;top:0;right:-420px;width:400px;height:100vh;background:var(--surface);border-left:1px solid var(--border-md);z-index:201;transition:right 0.25s;overflow-y:auto;padding:24px;}
+.side-panel.open{right:0;}
+.panel-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-3);float:right;padding:0;}
+.panel-close:hover{color:var(--text);}
+.panel-title{font-size:15px;font-weight:600;letter-spacing:-0.3px;margin-bottom:20px;padding-right:24px;}
+.panel-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.panel-field label{font-size:11px;font-weight:500;color:var(--text-2);}
+.panel-field input,.panel-field select,.panel-field textarea{padding:8px 10px;border-radius:var(--r);border:1px solid var(--border-md);font-size:13px;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);}
+.panel-field input:focus,.panel-field select:focus,.panel-field textarea:focus{outline:none;border-color:var(--purple);}
+.panel-field textarea{min-height:60px;resize:vertical;}
+.status-row{display:flex;gap:6px;flex-wrap:wrap;}
+.status-opt{font-size:11px;font-weight:500;padding:5px 12px;border-radius:999px;border:1px solid var(--border-md);cursor:pointer;font-family:'Inter',sans-serif;background:transparent;color:var(--text-2);transition:all 0.15s;}
+.status-opt:hover{border-color:var(--border-md);background:var(--bg);}
+.status-opt.active-pendente{background:var(--surface-2);color:var(--text-2);border-color:var(--border-md);}
+.status-opt.active-em_andamento{background:var(--purple-bg);color:var(--purple-txt);border-color:var(--purple);}
+.status-opt.active-concluido{background:var(--green-bg);color:var(--green-txt);border-color:var(--green);}
+.status-opt.active-atrasado{background:var(--red-bg);color:var(--red);border-color:var(--red);}
+.panel-actions{display:flex;gap:8px;margin-top:20px;}
+.btn-save-panel{flex:1;padding:9px;background:var(--text);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer;}
+.btn-save-panel:hover{background:#333;}
+.btn-delete{padding:9px 14px;background:transparent;color:var(--red);border:1px solid var(--red-bg);border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;}
+.btn-delete:hover{background:var(--red-bg);}
+.panel-divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
+
+/* UTILS */
+.loading{text-align:center;padding:60px 0;color:var(--text-3);}
+.spinner{width:20px;height:20px;border:2px solid var(--border-md);border-top-color:var(--purple);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;font-size:12px;font-weight:500;padding:9px 16px;border-radius:var(--r);opacity:0;transform:translateY(6px);transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;transform:translateY(0);}
+.empty-state{text-align:center;padding:30px;color:var(--text-3);font-size:12px;}
+</style>
+</head>
+<body>
+
+<div id="root"><div class="loading"><div class="spinner"></div>Carregando...</div></div>
+
+<!-- PAINEL LATERAL COMO -->
+<div class="panel-overlay" id="panel-overlay" onclick="closePanel()"></div>
+<div class="side-panel" id="side-panel">
+  <button class="panel-close" onclick="closePanel()">&#10005;</button>
+  <div class="panel-title" id="panel-title">Editar atividade</div>
+
+  <div class="panel-field">
+    <label>O que fazer</label>
+    <input type="text" id="panel-texto" placeholder="Descrever a atividade...">
+  </div>
+  <div class="panel-field">
+    <label>Status</label>
+    <div class="status-row" id="panel-status-row"></div>
+  </div>
+  <div class="panel-field">
+    <label>Responsavel</label>
+    <select id="panel-resp"></select>
+  </div>
+  <div class="panel-field">
+    <label>Tipo de prazo</label>
+    <select id="panel-tipo-prazo" onchange="togglePanelPrazo()">
+      <option value="data">Data fixa</option>
+      <option value="dependencia">Apos outra atividade</option>
+    </select>
+  </div>
+  <div class="panel-field" id="panel-data-field">
+    <label>Data prazo</label>
+    <input type="date" id="panel-data">
+  </div>
+  <div class="panel-field" id="panel-dep-field" style="display:none">
+    <label>Inicia apos</label>
+    <select id="panel-dep"></select>
+  </div>
+
+  <div class="panel-actions">
+    <button class="btn-save-panel" onclick="saveComo()">Salvar</button>
+    <button class="btn-delete" onclick="deleteComo()">Remover</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SB='https://wmxqvcosanbijurppkpa.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndteHF2Y29zYW5iaWp1cnBwa3BhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2ODQ0NDgsImV4cCI6MjA5ODI2MDQ0OH0.hdS38qchHZYy7W7EKdgIUkumjUkRLT3GEEiS8a56ZR8';
+
+// Pega token e projetoId da URL ou localStorage
+const params=new URLSearchParams(window.location.search);
+const PROJETO_ID=params.get('projeto');
+let accessToken=localStorage.getItem('sb_token');
+let currentProfile=null;
+let usuarios=[];
+let allComos=[];
+let currentComoId=null;
+let selectedStatus='pendente';
+let openPqIds=new Set();
+let openOqIds=new Set();
+
+// Inline add state
+let addingPq=false;
+let addingOq={};
+let addingComo={};
+
+function h(){return{'apikey':KEY,'Authorization':'Bearer '+accessToken,'Content-Type':'application/json','Prefer':'return=representation'};}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toast(msg,ok){const el=document.getElementById('toast');el.textContent=msg;el.style.background=ok?'var(--done)':'var(--text)';el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2400);}
+
+async function init(){
+  if(!accessToken||!PROJETO_ID){document.getElementById('root').innerHTML='<div class="empty-state">Acesso invalido. Volte ao planejador.</div>';return;}
+  try{
+    const r=await fetch(SB+'/rest/v1/usuarios?id=eq.'+await getMyId()+'&select=*,grupos(nome)',{headers:h()});
+    const data=await r.json();currentProfile=data[0]||null;
+  }catch(e){}
+  const [usrR]=await Promise.all([fetch(SB+'/rest/v1/usuarios?order=nome.asc',{headers:h()})]);
+  usuarios=await usrR.json();if(!Array.isArray(usuarios))usuarios=[];
+  await loadAndRender();
+}
+
+async function getMyId(){
+  const r=await fetch(SB+'/auth/v1/user',{headers:{'apikey':KEY,'Authorization':'Bearer '+accessToken}});
+  const d=await r.json();return d.id;
+}
+
+async function loadAndRender(){
+  const [projR,pqR]=await Promise.all([
+    fetch(SB+'/rest/v1/projetos?id=eq.'+PROJETO_ID+'&select=*,empresas(nome,cor)',{headers:h()}),
+    fetch(SB+'/rest/v1/pq?projeto_id=eq.'+PROJETO_ID+'&order=ordem.asc,created_at.asc',{headers:h()})
+  ]);
+  const projs=await projR.json();const proj=Array.isArray(projs)?projs[0]:null;
+  const pqs=await pqR.json();
+  if(!proj){document.getElementById('root').innerHTML='<div class="empty-state">Projeto nao encontrado.</div>';return;}
+
+  // Load oqs and comos
+  let oqs=[],comos=[];
+  if(Array.isArray(pqs)&&pqs.length){
+    const pqIds=pqs.map(p=>p.id);
+    const [oqR]=await Promise.all([fetch(SB+'/rest/v1/oq?pq_id=in.('+pqIds.join(',')+')'+'&order=ordem.asc,created_at.asc',{headers:h()})]);
+    oqs=await oqR.json();if(!Array.isArray(oqs))oqs=[];
+    if(oqs.length){
+      const oqIds=oqs.map(o=>o.id);
+      const comosR=await fetch(SB+'/rest/v1/como?oq_id=in.('+oqIds.join(',')+')'+'&order=ordem.asc,created_at.asc&select=*,usuarios(nome)',{headers:h()});
+      comos=await comosR.json();if(!Array.isArray(comos))comos=[];
+    }
+  }
+  allComos=comos;
+  render(proj,Array.isArray(pqs)?pqs:[],Array.isArray(oqs)?oqs:[],comos);
+}
+
+function calcPct(items){
+  if(!items.length)return 0;
+  return Math.round(items.filter(c=>c.status==='concluido').length/items.length*100);
+}
+
+function render(proj,pqs,oqs,comos){
+  const emp=proj.empresas||null;
+  const empCor=emp?emp.cor:'var(--purple)';
+  const empNome=emp?esc(emp.nome):'';
+  const totalPct=calcPct(comos);
+  const role=currentProfile?currentProfile.role:'colaborador';
+  const canEdit=['superadmin','admin','gestor'].includes(role);
+
+  let html='<div class="proj-header">'+
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'+
+      '<div style="width:12px;height:12px;border-radius:50%;background:'+(proj.cor||'var(--purple)')+'"></div>'+
+      '<div class="proj-title">'+esc(proj.nome)+'</div>'+
+    '</div>'+
+    '<div class="proj-meta">'+
+      '<span class="badge badge-'+(proj.status||'ativo')+'">'+(proj.status||'ativo')+'</span>'+
+      (empNome?'<span class="badge" style="background:'+empCor+'22;color:'+empCor+'">'+empNome+'</span>':'')+
+      (proj.data_fim?'<span style="font-size:11px;color:var(--text-3)">Prazo: '+proj.data_fim+'</span>':'')+
+    '</div>'+
+    '<div class="proj-progress">'+
+      '<div class="proj-prog-bar"><div class="proj-prog-fill" style="width:'+totalPct+'%"></div></div>'+
+      '<span class="proj-prog-label">'+totalPct+'%</span>'+
+      '<span style="font-size:11px;color:var(--text-3)">'+comos.filter(c=>c.status==='concluido').length+'/'+comos.length+' concluidos</span>'+
+    '</div>'+
+  '</div>';
+
+  // PQs
+  pqs.forEach(pq=>{
+    const pqOqs=oqs.filter(o=>o.pq_id===pq.id);
+    const pqComos=comos.filter(c=>pqOqs.some(o=>o.id===c.oq_id));
+    const pqPct=calcPct(pqComos);
+    const isOpen=openPqIds.has(pq.id)||pqs.length<=3;
+    if(isOpen)openPqIds.add(pq.id);
+
+    html+='<div class="pq-block" id="pq-'+pq.id+'">'+
+      '<div class="pq-header" onclick="togglePq(\''+pq.id+'\')">'+
+        '<span class="pq-label">POR QUE</span>'+
+        '<span class="pq-texto">'+esc(pq.texto)+'</span>'+
+        '<div class="pq-prog">'+
+          '<div class="prog-bar"><div class="prog-fill" style="width:'+pqPct+'%"></div></div>'+
+          '<span class="prog-pct">'+pqPct+'%</span>'+
+        '</div>'+
+        '<span class="pq-chevron'+(isOpen?' open':'')+'">&#9660;</span>'+
+      '</div>'+
+      '<div class="pq-body'+(isOpen?' open':'')+'" id="pq-body-'+pq.id+'">';
+
+    // OQs
+    pqOqs.forEach(oq=>{
+      const oqComos=comos.filter(c=>c.oq_id===oq.id);
+      const oqPct=calcPct(oqComos);
+      const oqOpen=openOqIds.has(oq.id)||pqOqs.length<=4;
+      if(oqOpen)openOqIds.add(oq.id);
+
+      html+='<div class="oq-block" id="oq-'+oq.id+'">'+
+        '<div class="oq-header" onclick="toggleOq(\''+oq.id+'\')">'+
+          '<span class="oq-label">O QUE</span>'+
+          '<span class="oq-texto">'+esc(oq.texto)+'</span>'+
+          '<div class="oq-prog">'+
+            '<div class="prog-bar"><div class="prog-fill" style="width:'+oqPct+'%"></div></div>'+
+            '<span class="prog-pct">'+oqPct+'%</span>'+
+          '</div>'+
+          '<span style="font-size:11px;color:var(--text-3);margin-left:4px;">&#9660;</span>'+
+        '</div>'+
+        '<div id="oq-body-'+oq.id+'"'+(oqOpen?'':' style="display:none"')+'>'+
+          '<div class="oq-body">';
+
+      // COmos
+      oqComos.forEach(como=>{
+        const resp=como.usuarios?esc(como.usuarios.nome):'';
+        const chkClass=como.status==='concluido'?'on':(como.status==='em_andamento'?'prog':(como.status==='atrasado'?'late':''));
+        const isLate=como.data_prazo&&como.data_prazo<new Date().toISOString().slice(0,10)&&como.status!=='concluido';
+        html+='<div class="como-row" onclick="openPanel(\''+como.id+'\')">'+
+          '<div class="como-chk '+(isLate?'late':chkClass)+'"></div>'+
+          '<span class="como-texto'+(como.status==='concluido'?' done':'')+'">'+esc(como.texto)+'</span>'+
+          (resp?'<span class="como-resp">'+resp+'</span>':'')+
+          (como.data_prazo&&como.status!=='concluido'?'<span class="como-prazo">'+como.data_prazo+'</span>':'')+
+          (como.depende_de?'<span class="como-dep">aguarda</span>':'')+
+          '<span class="status-badge as-'+(isLate?'atrasado':como.status)+'">'+(isLate?'atrasado':como.status.replace('_',' '))+'</span>'+
+        '</div>';
+      });
+
+      // Add como inline
+      if(canEdit){
+        if(addingComo[oq.id]){
+          html+='<div class="add-inline">'+
+            '<span style="font-size:10px;font-weight:600;color:var(--text-3);flex-shrink:0">COMO</span>'+
+            '<input class="add-inline-inp" id="inp-como-'+oq.id+'" placeholder="Descrever o como..." autocomplete="off" onkeydown="handleComoKey(event,\''+oq.id+'\',\''+pq.id+'\')">'+
+            '<button class="add-inline-btn" onclick="cancelAddComo(\''+oq.id+'\')">Cancelar</button>'+
+            '<button class="add-inline-btn ok" onclick="saveComorow(\''+oq.id+'\',\''+pq.id+'\')">Adicionar</button>'+
+          '</div>';
+        }else{
+          html+='<div class="add-trigger-row" onclick="startAddComo(\''+oq.id+'\')">+ adicionar como</div>';
+        }
+      }
+
+      html+='</div></div></div>';
+    });
+
+    // Add oq inline
+    if(canEdit){
+      if(addingOq[pq.id]){
+        html+='<div class="add-inline" style="margin-left:12px">'+
+          '<span style="font-size:10px;font-weight:600;color:var(--amber);flex-shrink:0">O QUE</span>'+
+          '<input class="add-inline-inp" id="inp-oq-'+pq.id+'" placeholder="Descrever o o que..." autocomplete="off" onkeydown="handleOqKey(event,\''+pq.id+'\')">'+
+          '<button class="add-inline-btn" onclick="cancelAddOq(\''+pq.id+'\')">Cancelar</button>'+
+          '<button class="add-inline-btn ok" onclick="saveOqrow(\''+pq.id+'\')">Adicionar</button>'+
+        '</div>';
+      }else{
+        html+='<div class="add-trigger-row" onclick="startAddOq(\''+pq.id+'\')">+ adicionar o que</div>';
+      }
+    }
+
+    html+='</div></div>';
+  });
+
+  // Add pq
+  if(canEdit){
+    if(addingPq){
+      html+='<div class="pq-block"><div class="add-inline">'+
+        '<span style="font-size:10px;font-weight:600;color:var(--purple);flex-shrink:0">POR QUE</span>'+
+        '<input class="add-inline-inp" id="inp-pq" placeholder="Qual o objetivo estrategico?" autocomplete="off" onkeydown="handlePqKey(event)">'+
+        '<button class="add-inline-btn" onclick="cancelAddPq()">Cancelar</button>'+
+        '<button class="add-inline-btn ok" onclick="savePqrow()">Adicionar</button>'+
+      '</div></div>';
+    }else{
+      html+='<div style="margin-top:8px"><div class="add-trigger-row" style="border:1px dashed var(--border);border-radius:var(--r)" onclick="startAddPq()">+ adicionar por que</div></div>';
+    }
+  }
+
+  document.getElementById('root').innerHTML=html;
+
+  // Focus inputs
+  setTimeout(()=>{
+    if(addingPq){const el=document.getElementById('inp-pq');if(el)el.focus();}
+    Object.keys(addingOq).forEach(id=>{if(addingOq[id]){const el=document.getElementById('inp-oq-'+id);if(el)el.focus();}});
+    Object.keys(addingComo).forEach(id=>{if(addingComo[id]){const el=document.getElementById('inp-como-'+id);if(el)el.focus();}});
+  },30);
+}
+
+// TOGGLE EXPAND
+function togglePq(id){
+  if(openPqIds.has(id))openPqIds.delete(id);else openPqIds.add(id);
+  const body=document.getElementById('pq-body-'+id);
+  const chev=document.querySelector('#pq-'+id+' .pq-chevron');
+  if(body){body.classList.toggle('open');}
+  if(chev){chev.classList.toggle('open');}
+}
+function toggleOq(id){
+  const body=document.getElementById('oq-body-'+id);
+  if(body){body.style.display=body.style.display==='none'?'':'none';}
+  if(openOqIds.has(id))openOqIds.delete(id);else openOqIds.add(id);
+}
+
+// ADD PQ
+function startAddPq(){addingPq=true;loadAndRender();}
+function cancelAddPq(){addingPq=false;loadAndRender();}
+function handlePqKey(e){if(e.key==='Enter')savePqrow();if(e.key==='Escape')cancelAddPq();}
+async function savePqrow(){
+  const inp=document.getElementById('inp-pq');if(!inp||!inp.value.trim())return;
+  try{
+    await fetch(SB+'/rest/v1/pq',{method:'POST',headers:h(),body:JSON.stringify({projeto_id:PROJETO_ID,grupo_id:currentProfile.grupo_id,texto:inp.value.trim()})});
+    toast('Por que adicionado!',true);
+  }catch(e){toast('Erro ao salvar');}
+  addingPq=false;loadAndRender();
+}
+
+// ADD OQ
+function startAddOq(pqId){addingOq={};addingOq[pqId]=true;openPqIds.add(pqId);loadAndRender();}
+function cancelAddOq(pqId){delete addingOq[pqId];loadAndRender();}
+function handleOqKey(e,pqId){if(e.key==='Enter')saveOqrow(pqId);if(e.key==='Escape')cancelAddOq(pqId);}
+async function saveOqrow(pqId){
+  const inp=document.getElementById('inp-oq-'+pqId);if(!inp||!inp.value.trim())return;
+  try{
+    await fetch(SB+'/rest/v1/oq',{method:'POST',headers:h(),body:JSON.stringify({pq_id:pqId,projeto_id:PROJETO_ID,grupo_id:currentProfile.grupo_id,texto:inp.value.trim()})});
+    toast('O que adicionado!',true);
+  }catch(e){toast('Erro ao salvar');}
+  delete addingOq[pqId];openPqIds.add(pqId);loadAndRender();
+}
+
+// ADD COMO
+function startAddComo(oqId){addingComo={};addingComo[oqId]=true;loadAndRender();}
+function cancelAddComo(oqId){delete addingComo[oqId];loadAndRender();}
+function handleComoKey(e,oqId,pqId){if(e.key==='Enter')saveComorow(oqId,pqId);if(e.key==='Escape')cancelAddComo(oqId);}
+async function saveComorow(oqId,pqId){
+  const inp=document.getElementById('inp-como-'+oqId);if(!inp||!inp.value.trim())return;
+  try{
+    await fetch(SB+'/rest/v1/como',{method:'POST',headers:h(),body:JSON.stringify({oq_id:oqId,projeto_id:PROJETO_ID,grupo_id:currentProfile.grupo_id,texto:inp.value.trim(),status:'pendente'})});
+    toast('Como adicionado!',true);
+  }catch(e){toast('Erro ao salvar');}
+  delete addingComo[oqId];openPqIds.add(pqId);openOqIds.add(oqId);loadAndRender();
+}
+
+// PAINEL LATERAL
+function openPanel(id){
+  currentComoId=id;
+  const como=allComos.find(c=>c.id===id);if(!como)return;
+  document.getElementById('panel-title').textContent=como.texto;
+  document.getElementById('panel-texto').value=como.texto;
+  document.getElementById('panel-data').value=como.data_prazo||'';
+  document.getElementById('panel-tipo-prazo').value=como.tipo_prazo||'data';
+  togglePanelPrazo();
+
+  // Status buttons
+  selectedStatus=como.status||'pendente';
+  renderStatusRow();
+
+  // Responsavel
+  const respSel=document.getElementById('panel-resp');
+  respSel.innerHTML='<option value="">Sem responsavel</option>'+usuarios.map(u=>'<option value="'+u.id+'"'+(u.id===como.responsavel_id?' selected':'')+'>'+esc(u.nome)+'</option>').join('');
+
+  // Dependencia
+  const depSel=document.getElementById('panel-dep');
+  const outrosComos=allComos.filter(c=>c.id!==id);
+  depSel.innerHTML='<option value="">Selecione</option>'+outrosComos.map(c=>'<option value="'+c.id+'"'+(c.id===como.depende_de?' selected':'')+'>'+esc(c.texto)+'</option>').join('');
+
+  document.getElementById('panel-overlay').classList.add('open');
+  document.getElementById('side-panel').classList.add('open');
+}
+
+function renderStatusRow(){
+  const statuses=[['pendente','Pendente'],['em_andamento','Em andamento'],['concluido','Concluido'],['atrasado','Atrasado']];
+  document.getElementById('panel-status-row').innerHTML=statuses.map(([val,label])=>
+    '<button class="status-opt'+(selectedStatus===val?' active-'+val:'')+'" onclick="selectStatus(\''+val+'\')">'+label+'</button>'
+  ).join('');
+}
+
+function selectStatus(val){selectedStatus=val;renderStatusRow();}
+
+function togglePanelPrazo(){
+  const tipo=document.getElementById('panel-tipo-prazo').value;
+  document.getElementById('panel-data-field').style.display=tipo==='data'?'':'none';
+  document.getElementById('panel-dep-field').style.display=tipo==='dependencia'?'':'none';
+}
+
+function closePanel(){
+  document.getElementById('panel-overlay').classList.remove('open');
+  document.getElementById('side-panel').classList.remove('open');
+  currentComoId=null;
+}
+
+async function saveComo(){
+  if(!currentComoId)return;
+  const texto=document.getElementById('panel-texto').value.trim();
+  const resp=document.getElementById('panel-resp').value||null;
+  const tipoPrazo=document.getElementById('panel-tipo-prazo').value;
+  const data=document.getElementById('panel-data').value||null;
+  const dep=document.getElementById('panel-dep').value||null;
+  if(!texto){toast('Preencha o texto');return;}
+  try{
+    await fetch(SB+'/rest/v1/como?id=eq.'+currentComoId,{method:'PATCH',headers:h(),body:JSON.stringify({texto,status:selectedStatus,responsavel_id:resp,tipo_prazo:tipoPrazo,data_prazo:tipoPrazo==='data'?data:null,depende_de:tipoPrazo==='dependencia'?dep:null})});
+    toast('Salvo!',true);closePanel();loadAndRender();
+  }catch(e){toast('Erro ao salvar');}
+}
+
+async function deleteComo(){
+  if(!currentComoId)return;
+  if(!confirm('Remover esta atividade?'))return;
+  try{
+    await fetch(SB+'/rest/v1/como?id=eq.'+currentComoId,{method:'DELETE',headers:h()});
+    toast('Removido',true);closePanel();loadAndRender();
+  }catch(e){toast('Erro ao remover');}
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePanel();});
+
+init();
+</script>
+</body>
+</html>

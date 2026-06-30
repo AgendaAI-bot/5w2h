@@ -10,3 +10,4 @@
 .txt { font-size: 12px; color: var(--text); line-height: 1.4; word-break: break-word; }
 .doneTxt { text-decoration: line-through; color: var(--text-3); }
 .meta { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.recIcon { color: var(--purple); font-size: 11px; }

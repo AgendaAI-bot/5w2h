@@ -6,9 +6,13 @@ import { useModal } from '../hooks/useModal'
 import { useToast } from '../hooks/useToast'
 import { WeekBoard } from '../components/planejador/WeekBoard'
 import { TarefaModal } from '../components/planejador/TarefaModal'
+import { TaskDetailPanel } from '../components/planejador/TaskDetailPanel'
 import { Toast } from '../components/ui/Toast'
 import { Spinner } from '../components/ui/Spinner'
-import { getExecucoesByWeek, toggleExecucao, createTarefaComExecucao } from '../services/tarefaService'
+import {
+  getExecucoesByWeek, toggleExecucao, createTarefaComExecucao,
+  gerarExecucoesRecorrentes, desativarRecorrencia, excluirTarefaCompleta,
+} from '../services/tarefaService'
 import { getProjetos } from '../services/projetoService'
 import { canManage } from '../utils/calcUtils'
 
@@ -18,15 +22,20 @@ export function PlanejadorPage({ dates, onStatsChange }) {
   const { from, to } = useWeek()
   const { toast, showToast } = useToast()
   const tarefaModal = useModal()
+  const detailModal = useModal()
 
   const [execucoes, setExecucoes] = useState([])
   const [projetos, setProjetos] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedDate, setSelectedDate] = useState('')
+  const [selectedExec, setSelectedExec] = useState(null)
 
   const loadBoard = useCallback(async () => {
     setLoading(true)
     try {
+      // Generate any missing recurring executions for this week first
+      await gerarExecucoesRecorrentes(profile.grupo_id, dates, token)
+
       const [execs, projs] = await Promise.all([
         getExecucoesByWeek(from, to, token),
         getProjetos(token),
@@ -41,19 +50,24 @@ export function PlanejadorPage({ dates, onStatsChange }) {
     } finally {
       setLoading(false)
     }
-  }, [from, to, token])
+  }, [from, to, token, dates, profile])
 
   useEffect(() => { loadBoard() }, [loadBoard])
 
-  async function handleToggle(id, status) {
+  function updateStats(updated) {
+    const done = updated.filter(e => e.status === 'concluido').length
+    const pct = updated.length > 0 ? Math.round((done / updated.length) * 100) : 0
+    onStatsChange?.({ total: updated.length, pct })
+  }
+
+  async function handleToggleStatus(id, status) {
     try {
       const next = await toggleExecucao(id, status, token)
-      setExecucoes(prev => prev.map(e => e.id === id ? { ...e, status: next } : e))
-      showToast(next === 'concluido' ? 'Concluida!' : 'Reaberta', next === 'concluido')
       const updated = execucoes.map(e => e.id === id ? { ...e, status: next } : e)
-      const done = updated.filter(e => e.status === 'concluido').length
-      const pct = updated.length > 0 ? Math.round((done / updated.length) * 100) : 0
-      onStatsChange?.({ total: updated.length, pct })
+      setExecucoes(updated)
+      updateStats(updated)
+      showToast(next === 'concluido' ? 'Concluida!' : 'Reaberta', next === 'concluido')
+      if (selectedExec?.id === id) setSelectedExec({ ...selectedExec, status: next })
     } catch (e) {
       showToast('Erro ao atualizar')
     }
@@ -64,6 +78,11 @@ export function PlanejadorPage({ dates, onStatsChange }) {
     tarefaModal.open()
   }
 
+  function handleOpenTask(exec) {
+    setSelectedExec(exec)
+    detailModal.open()
+  }
+
   async function handleSaveTarefa(payload) {
     await createTarefaComExecucao({
       ...payload,
@@ -71,6 +90,24 @@ export function PlanejadorPage({ dates, onStatsChange }) {
       criado_por: user.id,
     }, token)
     showToast('Tarefa criada!', true)
+    await loadBoard()
+  }
+
+  async function handleDeactivate() {
+    if (!selectedExec?.template_id) return
+    await desativarRecorrencia(selectedExec.template_id, token)
+    showToast('Recorrencia desativada', true)
+    detailModal.close()
+    setSelectedExec(null)
+    await loadBoard()
+  }
+
+  async function handleDelete() {
+    if (!selectedExec?.template_id) return
+    await excluirTarefaCompleta(selectedExec.template_id, token)
+    showToast('Tarefa excluida', true)
+    detailModal.close()
+    setSelectedExec(null)
     await loadBoard()
   }
 
@@ -88,7 +125,7 @@ export function PlanejadorPage({ dates, onStatsChange }) {
             canAdd={canManage(profile?.role)}
             selectedEmpresa={selectedEmpresa}
             filteredUsers={filteredUsers}
-            onToggle={handleToggle}
+            onOpenTask={handleOpenTask}
             onAdd={handleOpenAdd}
           />
         )
@@ -99,8 +136,16 @@ export function PlanejadorPage({ dates, onStatsChange }) {
         onClose={tarefaModal.close}
         dateStr={selectedDate}
         projetos={projetos}
-        weekDates={dates}
         onSave={handleSaveTarefa}
+      />
+
+      <TaskDetailPanel
+        isOpen={detailModal.isOpen}
+        onClose={() => { detailModal.close(); setSelectedExec(null) }}
+        execucao={selectedExec}
+        onDeactivate={handleDeactivate}
+        onDelete={handleDelete}
+        onToggleStatus={handleToggleStatus}
       />
 
       <Toast {...toast} />

@@ -2,7 +2,7 @@ import { dk, todayStr } from '../../utils/dateUtils'
 import { DayColumn } from './DayColumn'
 import styles from './WeekBoard.module.css'
 
-export function WeekBoard({ dates, execucoes, usuarios, currentUserId, canSeeAll, canAdd, selectedEmpresa, filteredUsers, onToggle, onAdd }) {
+export function WeekBoard({ dates, execucoes, usuarios, currentUserId, canSeeAll, canAdd, selectedEmpresa, filteredUsers, onOpenTask, onAdd }) {
   const today = todayStr()
   const hasUserFilter = Object.keys(filteredUsers).length > 0
 
@@ -37,7 +37,7 @@ export function WeekBoard({ dates, execucoes, usuarios, currentUserId, canSeeAll
             currentUserId={currentUserId}
             canSeeAll={canSeeAll}
             canAdd={canAdd}
-            onToggle={onToggle}
+            onOpenTask={onOpenTask}
             onAdd={() => onAdd(dateStr)}
           />
         )

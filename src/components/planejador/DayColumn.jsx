@@ -2,7 +2,7 @@ import { DAYS } from '../../utils/dateUtils'
 import { TaskCard } from './TaskCard'
 import styles from './DayColumn.module.css'
 
-export function DayColumn({ date, index, isToday, execucoes, usuarios, currentUserId, canSeeAll, canAdd, onToggle, onAdd }) {
+export function DayColumn({ date, index, isToday, execucoes, usuarios, currentUserId, canSeeAll, canAdd, onOpenTask, onAdd }) {
   return (
     <div className={styles.col}>
       <div className={`${styles.hdr}${isToday ? ' ' + styles.today : ' ' + styles.normal}`}>
@@ -17,7 +17,7 @@ export function DayColumn({ date, index, isToday, execucoes, usuarios, currentUs
           usuarios={usuarios}
           currentUserId={currentUserId}
           canSeeAll={canSeeAll}
-          onToggle={() => onToggle(ex.id, ex.status)}
+          onOpen={() => onOpenTask(ex)}
         />
       ))}
 

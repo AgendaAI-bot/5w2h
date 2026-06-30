@@ -3,14 +3,8 @@ import { Modal, ModalActions } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { useApp } from '../../context/AppContext'
 import { useAuth } from '../../context/AuthContext'
-import { dk } from '../../utils/dateUtils'
 
-const WEEK_DAYS = [
-  { label: 'Seg', value: 1 }, { label: 'Ter', value: 2 }, { label: 'Qua', value: 3 },
-  { label: 'Qui', value: 4 }, { label: 'Sex', value: 5 }, { label: 'Sab', value: 6 }, { label: 'Dom', value: 0 },
-]
-
-export function TarefaModal({ isOpen, onClose, dateStr, projetos, weekDates, onSave }) {
+export function TarefaModal({ isOpen, onClose, dateStr, projetos, onSave }) {
   const { empresas, usuarios, tipos, selectedEmpresa } = useApp()
   const { user } = useAuth()
 
@@ -20,8 +14,7 @@ export function TarefaModal({ isOpen, onClose, dateStr, projetos, weekDates, onS
   const [projetoId, setProjetoId] = useState('')
   const [respId, setRespId] = useState('')
   const [data, setData] = useState('')
-  const [recorrente, setRecorrente] = useState(false)
-  const [selectedDays, setSelectedDays] = useState({})
+  const [recorrenciaTipo, setRecorrenciaTipo] = useState('nenhuma')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -33,30 +26,15 @@ export function TarefaModal({ isOpen, onClose, dateStr, projetos, weekDates, onS
       setProjetoId('')
       setRespId(user?.id || '')
       setData(dateStr || '')
-      setRecorrente(false)
-      setSelectedDays({})
+      setRecorrenciaTipo('nenhuma')
       setError('')
     }
   }, [isOpen, dateStr, selectedEmpresa, user])
 
-  function toggleDay(day) {
-    setSelectedDays(prev => {
-      const next = { ...prev }
-      if (next[day]) delete next[day]
-      else next[day] = true
-      return next
-    })
-  }
-
   async function handleSave() {
     if (!empresaId) { setError('Selecione a empresa'); return }
     if (!obs.trim()) { setError('Preencha a descricao'); return }
-    const dias = Object.keys(selectedDays).map(Number)
-    if (recorrente && dias.length === 0) { setError('Selecione ao menos um dia'); return }
-
-    const datas = recorrente
-      ? weekDates.filter(d => selectedDays[d.getDay()]).map(d => dk(d))
-      : [data]
+    if (!data) { setError('Selecione a data'); return }
 
     setLoading(true)
     setError('')
@@ -68,10 +46,8 @@ export function TarefaModal({ isOpen, onClose, dateStr, projetos, weekDates, onS
         observacao: obs.trim(),
         projeto_id: projetoId || null,
         usuario_id: respId || user.id,
-        data_pontual: recorrente ? null : data,
-        recorrente,
-        dias_semana: recorrente ? dias : [],
-        datas,
+        data_pontual: data,
+        recorrencia_tipo: recorrenciaTipo,
       })
       onClose()
     } catch (e) {
@@ -79,6 +55,19 @@ export function TarefaModal({ isOpen, onClose, dateStr, projetos, weekDates, onS
     } finally {
       setLoading(false)
     }
+  }
+
+  const recorrenciaPreview = () => {
+    if (recorrenciaTipo === 'nenhuma' || !data) return null
+    const d = new Date(data + 'T00:00:00')
+    const diasSemana = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado']
+    if (recorrenciaTipo === 'semanal') {
+      return `Vai se repetir toda ${diasSemana[d.getDay()]}-feira, a partir de ${data}`
+    }
+    if (recorrenciaTipo === 'mensal') {
+      return `Vai se repetir todo dia ${d.getDate()} do mes, a partir de ${data}`
+    }
+    return null
   }
 
   return (
@@ -130,28 +119,17 @@ export function TarefaModal({ isOpen, onClose, dateStr, projetos, weekDates, onS
         </div>
         <div className="field">
           <label>Recorrencia</label>
-          <select value={recorrente ? 'sim' : 'nao'} onChange={e => setRecorrente(e.target.value === 'sim')}>
-            <option value="nao">Nao recorrente</option>
-            <option value="sim">Recorrente</option>
+          <select value={recorrenciaTipo} onChange={e => setRecorrenciaTipo(e.target.value)}>
+            <option value="nenhuma">Nao recorrente</option>
+            <option value="semanal">Toda semana</option>
+            <option value="mensal">Todo mes</option>
           </select>
         </div>
       </div>
 
-      {recorrente && (
-        <div className="field">
-          <label>Repetir nos dias</label>
-          <div className="recorr-days">
-            {WEEK_DAYS.map(d => (
-              <button
-                key={d.value}
-                type="button"
-                className={`day-opt${selectedDays[d.value] ? ' selected' : ''}`}
-                onClick={() => toggleDay(d.value)}
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
+      {recorrenciaPreview() && (
+        <div style={{ fontSize: 12, color: 'var(--purple)', background: 'var(--purple-bg)', padding: '8px 12px', borderRadius: 'var(--r)', marginBottom: 14 }}>
+          {recorrenciaPreview()}
         </div>
       )}
 

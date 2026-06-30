@@ -1,0 +1,14 @@
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.overlay.open { opacity: 1; pointer-events: all; }
+.panel { position: fixed; top: 0; right: -440px; width: 400px; height: 100vh; background: var(--surface); border-left: 1px solid var(--border-md); z-index: 201; transition: right 0.25s; overflow-y: auto; padding: 24px; }
+.panel.open { right: 0; }
+.close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-3); float: right; padding: 0; }
+.close:hover { color: var(--text); }
+.title { font-size: 15px; font-weight: 600; margin-bottom: 20px; padding-right: 28px; clear: both; }
+.statusRow { display: flex; gap: 6px; flex-wrap: wrap; }
+.statusOpt { font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--border-md); cursor: pointer; font-family: 'Inter', sans-serif; background: transparent; color: var(--text-2); }
+.ap { background: var(--surface-2); color: var(--text-2); border-color: var(--border-md); }
+.ae { background: var(--purple-bg); color: var(--purple-txt); border-color: var(--purple); }
+.ac { background: var(--green-bg); color: var(--green-txt); border-color: var(--green); }
+.aa { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+.actions { display: flex; gap: 8px; margin-top: 20px; }

@@ -1,0 +1,6 @@
+.bar { padding: 6px 24px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.label { font-size: 11px; color: var(--text-3); margin-right: 4px; }
+.filter { display: flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border-md); background: transparent; font-size: 11px; font-weight: 500; color: var(--text-2); cursor: pointer; font-family: 'Inter', sans-serif; }
+.filter:hover { background: var(--bg); }
+.active { background: var(--text); color: #fff; border-color: var(--text); }
+.avatar { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: #fff; flex-shrink: 0; }

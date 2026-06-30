@@ -1,0 +1,4 @@
+.tabs { display: flex; gap: 2px; padding: 0 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.tab { font-size: 12px; font-weight: 500; color: var(--text-3); padding: 9px 14px; border-bottom: 2px solid transparent; cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Inter', sans-serif; transition: color 0.15s; }
+.tab:hover { color: var(--text-2); }
+.active { color: var(--text); border-bottom-color: var(--purple); }

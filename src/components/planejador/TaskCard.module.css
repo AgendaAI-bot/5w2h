@@ -1,0 +1,12 @@
+.task { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 8px 9px; display: flex; align-items: flex-start; gap: 7px; cursor: pointer; }
+.task:hover { border-color: var(--border-md); }
+.done { opacity: 0.4; }
+.late { border-left: 2.5px solid var(--red); border-radius: 0 var(--r) var(--r) 0; }
+.chk { width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid var(--border-md); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; }
+.on { background: var(--done); border-color: var(--done); }
+.on::after { content: ''; width: 8px; height: 5px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translateY(-1px); display: block; }
+.late-chk { background: var(--red-bg); border-color: var(--red); }
+.body { flex: 1; min-width: 0; }
+.txt { font-size: 12px; color: var(--text); line-height: 1.4; word-break: break-word; }
+.doneTxt { text-decoration: line-through; color: var(--text-3); }
+.meta { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }

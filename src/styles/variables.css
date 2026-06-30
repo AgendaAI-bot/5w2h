@@ -1,0 +1,22 @@
+:root {
+  --bg: #F7F6F3;
+  --surface: #FFFFFF;
+  --surface-2: #F0EEE9;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-md: rgba(0, 0, 0, 0.14);
+  --text: #1C1B18;
+  --text-2: #6B6A65;
+  --text-3: #A5A49F;
+  --purple: #534AB7;
+  --purple-bg: #EEEDFE;
+  --purple-txt: #3C3489;
+  --green: #0B6E4F;
+  --green-bg: #E2F4ED;
+  --green-txt: #085040;
+  --red: #D94040;
+  --red-bg: #FDEAEA;
+  --amber: #B07010;
+  --amber-bg: #FEF3DC;
+  --done: #1D9E75;
+  --r: 8px;
+}

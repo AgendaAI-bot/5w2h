@@ -1,0 +1,8 @@
+.bar { padding: 8px 24px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.filter { display: flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border-md); background: transparent; font-size: 12px; font-weight: 500; color: var(--text-2); cursor: pointer; font-family: 'Inter', sans-serif; }
+.filter:hover { background: var(--bg); }
+.active { color: var(--text); border-color: var(--text); }
+.todas.active { background: var(--text); color: #fff; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.addBtn { margin-left: auto; font-size: 11px; color: var(--text-3); background: none; border: 1px dashed var(--border-md); border-radius: 999px; padding: 4px 10px; cursor: pointer; font-family: 'Inter', sans-serif; }
+.addBtn:hover { color: var(--text-2); }

@@ -1,0 +1,12 @@
+.col { display: flex; flex-direction: column; gap: 6px; }
+.hdr { padding: 8px 10px 7px; border-radius: var(--r); text-align: center; margin-bottom: 2px; border: 1px solid transparent; }
+.today { background: var(--green-bg); border-color: rgba(11,110,79,0.15); }
+.normal { background: var(--surface); border-color: var(--border); }
+.dayName { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; }
+.today .dayName { color: var(--green-txt); }
+.normal .dayName { color: var(--text-3); }
+.dayDate { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.1; margin-top: 2px; }
+.today .dayDate { color: var(--green); }
+.normal .dayDate { color: var(--text); }
+.addTrigger { font-size: 11px; color: var(--text-3); display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 6px 8px; border-radius: var(--r); border: 1px dashed var(--border); background: none; font-family: 'Inter', sans-serif; width: 100%; }
+.addTrigger:hover { color: var(--text-2); border-color: var(--border-md); background: var(--surface); }

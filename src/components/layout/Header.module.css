@@ -1,0 +1,31 @@
+.progBar { height: 3px; background: var(--border); }
+.progFill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--green)); transition: width 0.5s; }
+.header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.inner { display: flex; align-items: center; justify-content: space-between; padding: 11px 24px; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 8px; }
+.dots { display: flex; }
+.dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--surface); }
+.d1 { background: var(--purple); }
+.d2 { background: var(--green); margin-left: -3px; }
+.name { font-size: 14px; font-weight: 600; letter-spacing: -0.3px; }
+.sub { font-size: 10px; color: var(--text-3); }
+.center { display: flex; align-items: center; gap: 8px; }
+.weekBtn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border-md); background: transparent; cursor: pointer; color: var(--text-2); font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.weekBtn:hover { background: var(--bg); }
+.weekLabel { font-size: 13px; font-weight: 500; min-width: 185px; text-align: center; letter-spacing: -0.2px; }
+.right { display: flex; align-items: center; gap: 8px; }
+.notifWrap { position: relative; }
+.notifBtn { position: relative; width: 30px; height: 30px; border-radius: var(--r); border: 1px solid var(--border-md); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.notifBtn:hover { background: var(--bg); }
+.notifDot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--red); border: 1.5px solid var(--surface); display: none; }
+.show { display: block !important; }
+.notifPanel { position: absolute; top: 36px; right: 0; width: 300px; background: var(--surface); border: 1px solid var(--border-md); border-radius: 12px; z-index: 300; padding: 14px; max-height: 380px; overflow-y: auto; }
+.notifHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; font-weight: 500; }
+.notifMark { font-size: 11px; color: var(--text-3); background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+.notifMark:hover { color: var(--text); }
+.userBtn { display: flex; align-items: center; gap: 7px; padding: 4px 10px 4px 4px; border: 1px solid var(--border-md); border-radius: 999px; background: transparent; cursor: pointer; }
+.userBtn:hover { background: var(--bg); }
+.avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; background: var(--purple); flex-shrink: 0; }
+.userName { font-size: 12px; font-weight: 500; color: var(--text); }
+.logoutBtn { font-size: 11px; color: var(--text-3); background: none; border: none; cursor: pointer; padding: 4px 6px; border-radius: var(--r); font-family: 'Inter', sans-serif; }
+.logoutBtn:hover { color: var(--red); }

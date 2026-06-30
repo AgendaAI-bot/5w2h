@@ -13,3 +13,19 @@ export async function createEmpresa({ grupo_id, nome, cor }, token) {
   )
   return Array.isArray(data) ? data[0] : data
 }
+
+export async function updateEmpresa(id, { nome, cor }, token) {
+  await sbFetch(
+    `/rest/v1/empresas?id=eq.${id}`,
+    { method: 'PATCH', body: JSON.stringify({ nome, cor }) },
+    token
+  )
+}
+
+export async function deactivateEmpresa(id, token) {
+  await sbFetch(
+    `/rest/v1/empresas?id=eq.${id}`,
+    { method: 'PATCH', body: JSON.stringify({ ativo: false }) },
+    token
+  )
+}
